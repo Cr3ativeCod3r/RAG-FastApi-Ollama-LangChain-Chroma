@@ -13,9 +13,10 @@ ENV UV_COMPILE_BYTECODE=1 \
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-install-project --no-dev
 
-# Copy application and documents
+# Copy application, frontend client, and documents
 COPY app ./app
 COPY documents ./documents
+COPY frontend ./frontend
 
 # Expose FastAPI default port
 EXPOSE 8000
