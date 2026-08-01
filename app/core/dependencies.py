@@ -1,4 +1,3 @@
-from functools import lru_cache
 from fastapi import Depends
 from app.core.config import Settings, get_settings
 from app.domain.ports import IDocumentLoader, IVectorStore, ILLMService
@@ -8,17 +7,15 @@ from app.infrastructure.ollama_llm import OllamaLLMService
 from app.services.rag_service import RagService
 
 
-@lru_cache()
 def get_document_loader() -> IDocumentLoader:
-    """Provide singleton instance of DocumentLoader."""
+    """Provide instance of DocumentLoader."""
     return ExcelDocumentLoader()
 
 
-@lru_cache()
 def get_llm_service(
     settings: Settings = Depends(get_settings),
 ) -> OllamaLLMService:
-    """Provide singleton instance of Ollama LLM service."""
+    """Provide Ollama LLM service."""
     return OllamaLLMService(settings=settings)
 
 

@@ -1,7 +1,11 @@
+import os
 import logging
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse
+
 from app.core.config import get_settings
 from app.api.routes import router as api_router
 
@@ -11,6 +15,10 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
 )
 logger = logging.getLogger("app.main")
+
+# Templates directory
+templates_dir = os.path.join(os.path.dirname(__file__), "templates")
+templates = Jinja2Templates(directory=templates_dir)
 
 
 @asynccontextmanager
@@ -31,7 +39,7 @@ def create_app() -> FastAPI:
     app = FastAPI(
         title=settings.PROJECT_NAME,
         version=settings.PROJECT_VERSION,
-        description="A containerized Retrieval-Augmented Generation (RAG) backend with FastAPI, LangChain, Ollama, and ChromaDB.",
+        description="A containerized Retrieval-Augmented Generation (RAG) backend with FastAPI, LangChain, Ollama, ChromaDB, and Jinja2 UI.",
         lifespan=lifespan,
     )
 
@@ -44,19 +52,21 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
+    # Web Interface (Jinja2)
+    @app.get("/", response_class=HTMLResponse, tags=["Web UI"])
+    async def index_view(request: Request):
+        return templates.TemplateResponse(
+            request=request,
+            name="index.html",
+            context={
+                "title": "Excel RAG AI Assistant",
+                "settings": settings,
+            },
+        )
+
     # Include API Routers
     app.include_router(api_router, prefix=settings.API_V1_PREFIX)
     app.include_router(api_router)  # Also expose without prefix for convenience
-
-    @app.get("/", tags=["Root"])
-    async def root():
-        return {
-            "message": "Welcome to Excel RAG API",
-            "docs": "/docs",
-            "health": f"{settings.API_V1_PREFIX}/health",
-            "ingest": f"{settings.API_V1_PREFIX}/ingest",
-            "ask": f"{settings.API_V1_PREFIX}/ask",
-        }
 
     return app
 
