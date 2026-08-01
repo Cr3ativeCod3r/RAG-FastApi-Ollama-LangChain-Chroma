@@ -86,7 +86,7 @@ Built following a **Layered Clean Architecture** and **SOLID** principles:
 3. **Start local Ollama & ChromaDB:**
    Make sure Ollama is running on your machine:
    ```bash
-   ollama pull llama3
+   ollama pull llama3.2:3b
    ollama pull nomic-embed-text
    ```
 
@@ -106,7 +106,7 @@ Built following a **Layered Clean Architecture** and **SOLID** principles:
 
 2. **Pull models inside Ollama container:**
    ```bash
-   docker exec -it rag_ollama ollama pull llama3
+   docker exec -it rag_ollama ollama pull llama3.2:3b
    docker exec -it rag_ollama ollama pull nomic-embed-text
    ```
 
