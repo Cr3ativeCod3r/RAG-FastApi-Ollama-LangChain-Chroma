@@ -13,8 +13,8 @@ export const ChatLauncher: React.FC<ChatLauncherProps> = ({ isOpen, onToggle }) 
       className={`fixed bottom-6 right-6 w-14 h-14 rounded-full bg-gradient-to-tr from-indigo-600 to-indigo-500 hover:from-indigo-700 hover:to-indigo-600 text-white shadow-xl shadow-indigo-600/30 flex items-center justify-center transition-all duration-300 hover:scale-105 active:scale-95 z-50 cursor-pointer ${
         isOpen ? 'rotate-90' : ''
       }`}
-      aria-label={isOpen ? 'Zamknij czat' : 'Otwórz czat pomocy'}
-      title={isOpen ? 'Zamknij czat' : 'Otwórz czat pomocy'}
+      aria-label={isOpen ? 'Close chat' : 'Open help chat'}
+      title={isOpen ? 'Close chat' : 'Open help chat'}
     >
       {isOpen ? (
         <X className="w-6 h-6" />

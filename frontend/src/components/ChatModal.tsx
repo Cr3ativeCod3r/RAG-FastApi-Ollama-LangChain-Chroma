@@ -39,7 +39,7 @@ export const ChatModal: React.FC<ChatModalProps> = ({
       className="fixed bottom-24 right-6 w-[410px] max-w-[calc(100vw-32px)] h-[600px] max-h-[calc(100vh-120px)] bg-white rounded-3xl shadow-2xl shadow-slate-900/15 border border-slate-200/90 flex flex-col overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-200 origin-bottom-right"
       role="dialog"
       aria-modal="true"
-      aria-label="Okno czatu pomocy"
+      aria-label="Help chat window"
     >
       <ChatHeader onClose={onClose} onClear={onClear} />
       <ChatMessageList messages={messages} isLoading={isLoading} />

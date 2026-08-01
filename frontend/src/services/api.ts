@@ -17,7 +17,7 @@ export async function askQuestion(query: string): Promise<AskResponse> {
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
     throw new Error(
-      errorData.detail || `Błąd serwera (${response.status}: ${response.statusText})`
+      errorData.detail || `Server error (${response.status}: ${response.statusText})`
     );
   }
 

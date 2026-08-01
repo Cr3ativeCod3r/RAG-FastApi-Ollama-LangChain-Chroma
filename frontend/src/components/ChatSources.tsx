@@ -13,7 +13,7 @@ export const ChatSources: React.FC<ChatSourcesProps> = ({ sources }) => {
     <div className="mt-2.5 pt-2 border-t border-slate-100 text-[11px]">
       <div className="flex items-center gap-1 text-indigo-600 font-semibold mb-1">
         <BookOpen className="w-3 h-3" />
-        <span>Źródła z bazy Excel:</span>
+        <span>Sources from Excel knowledge base:</span>
       </div>
       <div className="flex flex-wrap gap-1">
         {sources.map((src, idx) => {

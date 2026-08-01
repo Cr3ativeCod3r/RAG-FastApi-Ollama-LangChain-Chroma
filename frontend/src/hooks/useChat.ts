@@ -2,16 +2,18 @@ import { useState, useCallback } from 'react';
 import { Message } from '../types/chat';
 import { askQuestion } from '../services/api';
 
-const DEFAULT_WELCOME_MSG: Message = {
-  id: 'welcome-msg',
+const WELCOME_TEXT = import.meta.env.VITE_WELCOME_MESSAGE || 'Hi! How can I help you today?';
+
+const createWelcomeMessage = (): Message => ({
+  id: `welcome-${Date.now()}`,
   sender: 'bot',
-  text: 'Cześć! W czym mogę Ci dzisiaj pomóc?',
+  text: WELCOME_TEXT,
   timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-};
+});
 
 export function useChat() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [messages, setMessages] = useState<Message[]>([DEFAULT_WELCOME_MSG]);
+  const [messages, setMessages] = useState<Message[]>([createWelcomeMessage()]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const toggleOpen = useCallback(() => {
@@ -23,13 +25,7 @@ export function useChat() {
   }, []);
 
   const clearMessages = useCallback(() => {
-    setMessages([
-      {
-        ...DEFAULT_WELCOME_MSG,
-        id: `welcome-${Date.now()}`,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      },
-    ]);
+    setMessages([createWelcomeMessage()]);
   }, []);
 
   const sendMessage = useCallback(async (text: string) => {
@@ -59,11 +55,11 @@ export function useChat() {
 
       setMessages((prev) => [...prev, botMsg]);
     } catch (err: unknown) {
-      const errMsg = err instanceof Error ? err.message : 'Nieoczekiwany błąd';
+      const errMsg = err instanceof Error ? err.message : 'Unknown error';
       const errorMsg: Message = {
         id: `bot-err-${Date.now()}`,
         sender: 'bot',
-        text: `Przepraszam, nie udało się uzyskać odpowiedzi (${errMsg}). Upewnij się, że backend RAG jest włączony na porcie 8000.`,
+        text: `Sorry, I was unable to retrieve an answer (${errMsg}). Please verify that the RAG backend service is running.`,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
 
