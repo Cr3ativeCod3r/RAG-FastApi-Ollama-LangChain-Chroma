@@ -34,70 +34,45 @@ Built following a **Layered Clean Architecture** and **SOLID** principles:
 
 ```text
 .
+├── docker-compose.yml            # Multi-container orchestration (FastAPI, React, Ollama, ChromaDB)
 ├── .gitignore
-├── .env.example
 ├── README.md
-├── pyproject.toml
-├── uv.lock
-├── docker-compose.yml
-├── backend.Dockerfile
-├── documents/
-│   └── knowledge_base.xlsx       # Excel file with Q&A / knowledge base data
-└── app/
-    ├── __init__.py
-    ├── main.py                   # FastAPI application entry point
-    ├── api/                      # Presentation Layer
-    │   ├── __init__.py
-    │   ├── routes.py             # API Endpoints (/health, /ingest, /ask, /ask/stream)
-    │   └── schemas.py            # Pydantic models (DTOs)
-    ├── core/                     # Configuration and DI setup
-    │   ├── __init__.py
-    │   ├── config.py             # Environment variables (pydantic-settings)
-    │   └── dependencies.py       # Dependency Injection container
-    ├── domain/                   # Domain Layer (Business Rules & Interfaces)
-    │   ├── __init__.py
-    │   └── ports.py              # Abstract Base Classes (IDocumentLoader, IVectorStore, ILLMService)
-    ├── infrastructure/           # Infrastructure Layer (Concrete Implementations)
-    │   ├── __init__.py
-    │   ├── chroma_db.py          # ChromaDB implementation
-    │   ├── ollama_llm.py         # Ollama / LangChain implementation
-    │   └── excel_loader.py       # Excel loader using pandas & openpyxl
-    └── services/                 # Application / Service Layer
-        ├── __init__.py
-        └── rag_service.py        # Core RAG orchestration logic
+│
+├── api-service/                  # Python / FastAPI Backend Service
+│   ├── .env.example
+│   ├── Dockerfile
+│   ├── pyproject.toml            # uv dependencies & project metadata
+│   ├── uv.lock
+│   ├── documents/
+│   │   └── knowledge_base.xlsx   # Excel knowledge base dataset
+│   ├── tests/                    # Backend unit & integration tests
+│   └── app/
+│       ├── __init__.py
+│       ├── main.py               # FastAPI application entry point & middleware
+│       ├── api/                  # Presentation Layer (Routes, Schemas DTO)
+│       ├── core/                 # Configuration, DI container, Limiter, Security
+│       ├── domain/               # Domain Layer & Port interfaces
+│       ├── infrastructure/       # ChromaDB, Ollama LLM, Excel Loader adapters
+│       └── services/             # RagService orchestration
+│
+└── web-client/                   # React + TypeScript + Vite Frontend Client
+    ├── .env.example
+    ├── Dockerfile
+    ├── package.json
+    ├── vite.config.ts
+    ├── index.html
+    └── src/
+        ├── components/           # Modular Chat Widget, Launcher, Modal, Messages
+        ├── hooks/                # useChat state & streaming hook
+        ├── services/             # API client communication
+        └── types/                # TypeScript interfaces
 ```
 
 ---
 
 ## 🛠️ Getting Started
 
-### Option 1: Running with UV (Local Development)
-
-1. **Activate virtual environment:**
-   ```bash
-   source .venv/bin/activate
-   ```
-
-2. **Sync dependencies (if needed):**
-   ```bash
-   uv sync
-   ```
-
-3. **Start local Ollama & ChromaDB:**
-   Make sure Ollama is running on your machine:
-   ```bash
-   ollama pull llama3.2:3b
-   ollama pull nomic-embed-text
-   ```
-
-4. **Start the FastAPI server:**
-   ```bash
-   uv run uvicorn app.main:app --reload --port 8000
-   ```
-
----
-
-### Option 2: Running with Docker Compose
+### Option 1: Running with Docker Compose (Recommended)
 
 1. **Start all services:**
    ```bash
@@ -109,6 +84,30 @@ Built following a **Layered Clean Architecture** and **SOLID** principles:
    docker exec -it rag_ollama ollama pull llama3.2:3b
    docker exec -it rag_ollama ollama pull nomic-embed-text
    ```
+
+3. **Access Services:**
+   - **Frontend Web Client:** `http://localhost:3000`
+   - **FastAPI Backend API:** `http://localhost:8000/docs`
+
+---
+
+### Option 2: Local Development
+
+#### 1. Backend (`api-service`)
+```bash
+cd api-service
+cp .env.example .env
+uv sync
+uv run uvicorn app.main:app --reload --port 8000
+```
+
+#### 2. Frontend (`web-client`)
+```bash
+cd web-client
+cp .env.example .env
+npm install
+npm run dev
+```
 
 ---
 
