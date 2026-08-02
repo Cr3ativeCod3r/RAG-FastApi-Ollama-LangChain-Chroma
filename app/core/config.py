@@ -27,6 +27,17 @@ class Settings(BaseSettings):
     CHUNK_OVERLAP: int = 50
     TOP_K_RESULTS: int = 4
 
+    # Security & Guardrails settings
+    MAX_QUERY_LENGTH: int = 2000
+    MAX_REQUEST_BODY_SIZE_BYTES: int = 1_048_576  # 1 MB
+    LLM_TIMEOUT_SECONDS: float = 60.0
+    REQUEST_TIMEOUT_SECONDS: float = 90.0
+
+    # Rate limiting settings
+    RATE_LIMIT_DEFAULT: str = "60/minute"
+    RATE_LIMIT_QUERY: str = "20/minute"
+    RATE_LIMIT_INGEST: str = "5/minute"
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
